@@ -316,3 +316,13 @@ if (document.getElementById('booksGrid')) {
 
 // Observer general para elementos con animación
 observeCards();
+
+function formatYear(year) {
+  if (!year) return '';
+  // Si el año es negativo (ej: -400), lo muestra como "400 a.C."
+  if (year < 0) {
+    return `${Math.abs(year)} a.C.`;
+  }
+  // Si es un año normal, lo devuelve tal cual
+  return year;
+}
