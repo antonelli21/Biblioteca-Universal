@@ -13,15 +13,14 @@ function renderStars(rating, large = false) {
   const half  = rating % 1 >= 0.5 ? 1 : 0;
   const empty = 5 - full - half;
   
-  // Declaramos la variable como 'html'
-  let html = `<svg width=\"0\" height=\"0\" style=\"position:absolute\"><defs><linearGradient id=\"halfGrad\" x1=\"0\" x2=\"1\" y1=\"0\" x2=\"1\" y1=\"0\" y2=\"0\"><stop offset=\"50%\" stop-color=\"var(--gold)\"/><stop offset=\"50%\" stop-color=\"var(--text-3)\"/></linearGradient></defs></svg><div class=\"stars-wrap\" aria-hidden=\"true\">`;
+  // CORREGIDO: Se cambiaron las comillas exteriores a simples '' para evitar las barras de escape \"\" que rompían el HTML
+  let html = '<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="halfGrad" x1="0" x2="1" y1="0" y2="0"><stop offset="50%" stop-color="var(--gold)"/><stop offset="50%" stop-color="var(--text-3)"/></linearGradient></defs></svg><div class="stars-wrap" aria-hidden="true">';
   
-  // Usamos siempre 'html += ...' para que coincida perfectamente
   for (let i = 0; i < full;  i++) html += starSVG(size, 'filled');
   for (let i = 0; i < half;  i++) html += starSVG(size, 'half');
   for (let i = 0; i < empty; i++) html += starSVG(size, '');
   
-  return html + `</div>`;
+  return html + '</div>';
 }
 
 function starSVG(size, cls) {
