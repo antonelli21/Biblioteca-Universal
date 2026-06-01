@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Biblioteca Universal — Los 20 grandes clásicos de la literatura. Explorá autores, sinopsis y dónde comprar cada obra." />
+  <title>Biblioteca Universal · Los 20 Clásicos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+  /* ══ INDEX — estilos locales ══ */
+
+  /* CTAs hero */
+  .hero-ctas{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;animation:fadeUp .8s .5s ease both;margin-top:2.5rem}
+  .btn-primary{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 2rem;background:var(--gold);color:var(--bg);font-family:var(--font-display);font-size:.95rem;font-weight:700;letter-spacing:.06em;border-radius:var(--radius);border:none;cursor:pointer;transition:opacity var(--transition-fast),transform var(--transition-fast),box-shadow var(--transition-fast);box-shadow:0 4px 24px rgba(201,168,76,.3)}
+  .btn-primary:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 8px 32px rgba(201,168,76,.4)}
+  .btn-secondary{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 2rem;background:transparent;color:var(--text);font-family:var(--font-body);font-size:.9rem;letter-spacing:.06em;border-radius:var(--radius);border:1px solid var(--border-light);cursor:pointer;transition:border-color var(--transition-fast),background var(--transition-fast),color var(--transition-fast)}
+  .btn-secondary:hover{border-color:var(--gold);background:var(--gold-dim);color:var(--gold)}
+
+  /* Stats hero */
+  .hero-stats{display:flex;align-items:center;justify-content:center;gap:2.5rem;flex-wrap:wrap;padding-top:3rem;margin-top:3rem;border-top:1px solid var(--border);animation:fadeUp .8s .6s ease both}
+  .hero-stat-num{font-family:var(--font-display);font-size:2rem;font-weight:900;color:var(--gold);line-height:1}
+  .hero-stat-label{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3);margin-top:.2rem}
+
+  /* Secciones */
+  .section{padding:clamp(4rem,8vw,7rem) clamp(1.5rem,4vw,3rem);max-width:1500px;margin:0 auto}
+  .section-header{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:clamp(2rem,4vw,3.5rem);flex-wrap:wrap}
+  .section-eyebrow{font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
+  .section-title{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:var(--text);line-height:1.05}
+  .section-title em{font-style:italic;color:var(--gold)}
+  .section-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;transition:gap var(--transition-fast)}
+  .section-link:hover{gap:.65rem}
+  .section-divider{width:100%;height:1px;background:var(--border);max-width:1500px;margin:0 auto}
+
+  /* Libros destacados */
+  .featured-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:1.25rem}
+  .featured-book{display:flex;gap:1rem;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;cursor:pointer;transition:transform var(--transition),border-color var(--transition),box-shadow var(--transition);opacity:0;transform:translateY(16px)}
+  .featured-book.visible{opacity:1;transform:translateY(0)}
+  .featured-book:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.25);box-shadow:var(--shadow-lg),0 0 30px rgba(201,168,76,.06)}
+  /* Portada libro destacado — 400×600 px | Proporción: 2:3 */
+  .featured-book-cover{width:64px;flex-shrink:0;aspect-ratio:2/3;border-radius:var(--radius-sm);overflow:hidden;background:var(--bg-3);position:relative}
+  .featured-book-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.88) saturate(.85);transition:filter .4s}
+  .featured-book:hover .featured-book-cover img{filter:brightness(1) saturate(1)}
+  .featured-book-info{flex:1;min-width:0}
+  .featured-book-author{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.2rem}
+  .featured-book-title{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:.3rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .featured-book-genre{font-size:.7rem;color:var(--text-3);margin-bottom:.5rem}
+  .featured-book-stars{display:flex;align-items:center;gap:.3rem}
+  .featured-book-rating{font-size:.75rem;font-weight:700;color:var(--gold)}
+
+  /* Autores fila */
+  .authors-row{display:flex;gap:1.25rem;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;padding-bottom:1rem;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+  .authors-row::-webkit-scrollbar{height:3px}
+  .authors-row::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:2px}
+  .author-mini-card{flex:0 0 auto;width:clamp(160px,22vw,210px);scroll-snap-align:start;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:transform var(--transition),border-color var(--transition),box-shadow var(--transition);opacity:0;transform:translateY(16px)}
+  .author-mini-card.visible{opacity:1;transform:translateY(0)}
+  .author-mini-card:hover{transform:translateY(-5px);border-color:rgba(201,168,76,.25);box-shadow:var(--shadow),0 0 24px rgba(201,168,76,.08)}
+  /* Foto autor mini — 800×800 px | 1:1 */
+  .author-mini-img{position:relative;aspect-ratio:1/1;width:100%;overflow:hidden;background:var(--bg-3)}
+  .author-mini-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;filter:brightness(.8) saturate(.7);transition:transform .5s cubic-bezier(.4,0,.2,1),filter .4s}
+  .author-mini-card:hover .author-mini-img img{transform:scale(1.06);filter:brightness(.9) saturate(.85)}
+  .author-mini-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,var(--surface) 0%,transparent 60%);pointer-events:none}
+  .author-mini-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bg-3) 0%,var(--surface-2) 100%);font-family:var(--font-display);font-size:2.5rem;font-weight:900;color:var(--gold);letter-spacing:-.04em;user-select:none}
+  .author-mini-placeholder span{opacity:.22}
+  .author-mini-body{padding:.9rem 1rem 1.1rem}
+  .author-mini-era{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.25rem}
+  .author-mini-name{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:.2rem}
+  .author-mini-dates{font-size:.72rem;color:var(--text-3)}
+
+  /* Accesos rápidos */
+  .quick-access{padding:clamp(3rem,6vw,5rem) clamp(1.5rem,4vw,3rem);background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .quick-access-inner{max-width:1500px;margin:0 auto}
+  .quick-access-title{text-align:center;font-family:var(--font-display);font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:var(--text);margin-bottom:2rem}
+  .quick-access-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:1rem}
+  .quick-card{display:flex;flex-direction:column;align-items:center;gap:.75rem;padding:2rem 1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);text-align:center;text-decoration:none;transition:transform var(--transition),border-color var(--transition),box-shadow var(--transition)}
+  .quick-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.3);box-shadow:var(--shadow),0 0 24px rgba(201,168,76,.08)}
+  .quick-card-icon{width:48px;height:48px;border-radius:50%;background:var(--gold-dim);border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;font-size:1.4rem;transition:background var(--transition-fast)}
+  .quick-card:hover .quick-card-icon{background:rgba(201,168,76,.25)}
+  .quick-card-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text)}
+  .quick-card-desc{font-size:.82rem;color:var(--text-2);line-height:1.5}
+
+  /* Sección Dónde Comprar */
+  .buy-section{padding:clamp(4rem,8vw,7rem) clamp(1.5rem,4vw,3rem);max-width:1100px;margin:0 auto}
+  .buy-section-header{text-align:center;margin-bottom:2.5rem}
+  .buy-search-wrap{position:relative;max-width:600px;margin:0 auto 3rem}
+  .buy-search-icon{position:absolute;left:1.1rem;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--text-3);pointer-events:none}
+  .buy-search-input{width:100%;padding:1rem 3rem 1rem 3rem;background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);color:var(--text);font-family:var(--font-body);font-size:1.05rem;outline:none;transition:border-color var(--transition-fast),box-shadow var(--transition-fast)}
+  .buy-search-input::placeholder{color:var(--text-3)}
+  .buy-search-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-dim),0 8px 32px rgba(0,0,0,.3)}
+  .buy-search-clear{position:absolute;right:1rem;top:50%;transform:translateY(-50%);font-size:.8rem;color:var(--text-3);opacity:0;pointer-events:none;transition:opacity var(--transition-fast);padding:.25rem}
+  .buy-search-clear.visible{opacity:1;pointer-events:all}
+  .buy-results{display:none}
+  .buy-results.active{display:block}
+  .buy-result-card{background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius-xl);overflow:hidden;margin-bottom:1rem;animation:fadeUp .3s ease both}
+  .buy-result-inner{display:grid;grid-template-columns:140px 1fr}
+  /* Portada resultado — 400×600 px | 2:3 */
+  .buy-result-cover{position:relative;background:var(--bg-3);min-height:200px}
+  .buy-result-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .buy-result-cover-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:3rem;font-weight:900;color:var(--gold);opacity:.18;text-align:center;padding:.5rem;letter-spacing:-.04em}
+  .buy-result-info{padding:1.5rem}
+  .buy-result-genre{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+  .buy-result-title{font-family:var(--font-display);font-size:clamp(1.3rem,2.5vw,1.8rem);font-weight:900;color:var(--text);line-height:1.1;margin-bottom:.3rem}
+  .buy-result-author{font-size:.9rem;color:var(--text-2);font-style:italic;margin-bottom:1rem}
+  .buy-result-meta{display:flex;gap:1.5rem;flex-wrap:wrap;padding-bottom:1rem;margin-bottom:1rem;border-bottom:1px solid var(--border)}
+  .buy-result-meta-key{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3);display:block;margin-bottom:.15rem}
+  .buy-result-meta-val{font-size:.85rem;color:var(--text);font-weight:600}
+  .buy-result-synopsis{font-size:.9rem;line-height:1.7;color:var(--text-2);margin-bottom:1.25rem}
+  .buy-links-title{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-3);margin-bottom:.65rem}
+  .buy-links-grid{display:flex;flex-wrap:wrap;gap:.5rem}
+  /* Reemplazá href="#" por el enlace real de cada tienda */
+  .buy-link{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;background:var(--bg-3);border:1px solid var(--border-light);border-radius:var(--radius);color:var(--text-2);font-size:.8rem;font-family:var(--font-body);transition:border-color var(--transition-fast),color var(--transition-fast),background var(--transition-fast);text-decoration:none}
+  .buy-link:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
+  .buy-no-results{display:none;text-align:center;padding:4rem 2rem;color:var(--text-3)}
+  .buy-no-results.active{display:block}
+  .buy-no-results-icon{font-size:3rem;margin-bottom:1rem;opacity:.35}
+  .buy-initial{text-align:center;padding:2rem 0 1rem;color:var(--text-3);font-size:.9rem}
+  .buy-suggestions{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:1rem}
+  .buy-suggestion-btn{padding:.35rem .9rem;font-size:.8rem;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-2);cursor:pointer;transition:border-color var(--transition-fast),color var(--transition-fast)}
+  .buy-suggestion-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+  /* Footer mejorado */
+  .footer-full{border-top:1px solid var(--border);padding:clamp(3rem,6vw,5rem) clamp(1.5rem,4vw,3rem) 2rem}
+  .footer-full-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:2fr repeat(3,1fr);gap:3rem;margin-bottom:3rem}
+  .footer-brand{font-family:var(--font-display);font-size:1.5rem;font-weight:900;color:var(--gold);margin-bottom:.75rem}
+  .footer-tagline{font-size:.88rem;color:var(--text-2);line-height:1.6;max-width:260px}
+  .footer-col-title{font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-3);margin-bottom:1rem}
+  .footer-col-links{display:flex;flex-direction:column;gap:.5rem}
+  .footer-col-links a{font-size:.88rem;color:var(--text-2);transition:color var(--transition-fast)}
+  .footer-col-links a:hover{color:var(--gold)}
+  .footer-bottom{border-top:1px solid var(--border);padding-top:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;max-width:1400px;margin:0 auto}
+  .footer-copy{font-size:.78rem;color:var(--text-3)}
+  .footer-bottom-links{display:flex;gap:1rem}
+  .footer-bottom-links a{font-size:.78rem;color:var(--text-3);transition:color var(--transition-fast)}
+  .footer-bottom-links a:hover{color:var(--text-2)}
+
+  /* Responsive */
+  @media (max-width:900px){.footer-full-inner{grid-template-columns:1fr 1fr}.buy-result-inner{grid-template-columns:100px 1fr}}
+  @media (max-width:640px){.hero-stats{gap:1.5rem}.buy-result-inner{grid-template-columns:1fr}.buy-result-cover{min-height:220px;aspect-ratio:16/9}.footer-full-inner{grid-template-columns:1fr;gap:2rem}.featured-grid{grid-template-columns:1fr}}
+  @media (max-width:480px){.hero-ctas{flex-direction:column;width:100%}.btn-primary,.btn-secondary{width:100%;justify-content:center}}
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+  <div class="cursor-follower" id="cursorFollower" aria-hidden="true"></div>
+
+  <!-- NAVBAR -->
+  <header role="banner">
+    <nav class="navbar" id="navbar" aria-label="Navegación principal">
+      <a href="index.html" class="navbar-brand">✦ Biblioteca</a>
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navList" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-list" id="navList" role="list">
+        <li class="nav-item"><a href="index.html" class="nav-link active">Inicio</a></li>
+        <li class="nav-item"><a href="time/timeline.html" class="nav-link">Línea de Tiempo</a></li>
+        <li class="nav-item" id="navLibros">
+          <a href="galeria.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+            Libros <span class="nav-arrow" aria-hidden="true">▾</span>
+          </a>
+          <ul class="dropdown" role="menu">
+            <li role="none"><a href="galeria.html" role="menuitem">Galería</a></li>
+            <li role="none"><a href="autores.html" role="menuitem">Autores</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="#donde-comprar" class="nav-link">Dónde Comprar</a></li>
+        <li class="nav-item"><a href="forms/forms.html" class="nav-link">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- HERO
+       ─────────────────────────────────────────────────────────
+       IMAGEN HERO — FONDO PRINCIPAL
+       Tamaño recomendado: 1920 × 1080 px
+       Formato: JPG o WEBP
+       Ruta sugerida: img/hero-bg.jpg
+       Para activar: descomentar el <img> dentro de .header-bg
+       ───────────────────────────────────────────────────────── -->
+  <section class="header" aria-label="Portada principal">
+    <div class="header-bg" id="headerBg" aria-hidden="true">
+      <!--
+        Imagen Hero — Tamaño recomendado: 1920×1080 px
+        <img src="img/hero-bg.jpg" alt="" aria-hidden="true"
+          style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.18;filter:saturate(.6)" />
+      -->
+    </div>
+
+    <div class="header-content">
+      <p class="header-label">Biblioteca Universal · 2026</p>
+      <h1 class="header-title">
+        <span class="title-line">Los 20 Grandes</span>
+        <span class="title-line italic">Clásicos</span>
+        <span class="title-line">de la Literatura</span>
+      </h1>
+      <p class="header-sub">
+        Una selección de las obras que definieron la imaginación humana.<br>
+        Explorá sinopsis, autores y dónde conseguir cada libro.
+      </p>
+      <div class="header-ornament" aria-hidden="true"><span></span><span>✦</span><span></span></div>
+
+      <div class="hero-ctas">
+        <a href="#libros-destacados" class="btn-primary">
+          Explorar libros
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#donde-comprar" class="btn-secondary">Dónde comprar</a>
+      </div>
+
+      <div class="hero-stats" aria-label="Estadísticas de la colección">
+        <div class="hero-stat"><div class="hero-stat-num">20</div><div class="hero-stat-label">Obras clásicas</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">13</div><div class="hero-stat-label">Autores</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">3000+</div><div class="hero-stat-label">Años de historia</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">★ 4.8</div><div class="hero-stat-label">Puntuación media</div></div>
+      </div>
+    </div>
+
+    <div class="header-scroll-hint" aria-hidden="true">
+      <span>Descubrí</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- LIBROS DESTACADOS -->
+  <div class="section-divider"></div>
+  <section class="section" id="libros-destacados" aria-label="Libros destacados">
+    <div class="section-header">
+      <div>
+        <p class="section-eyebrow">✦ Colección</p>
+        <h2 class="section-title">Libros <em>Destacados</em></h2>
+      </div>
+      <a href="galeria.html" class="section-link">Ver galería completa →</a>
+    </div>
+    <div class="featured-grid" id="featuredGrid"></div>
+  </section>
+
+  <!-- AUTORES DESTACADOS -->
+  <div class="section-divider"></div>
+  <section class="section" aria-label="Autores destacados">
+    <div class="section-header">
+      <div>
+        <p class="section-eyebrow">◎ Voces inmortales</p>
+        <h2 class="section-title">Los <em>Autores</em></h2>
+      </div>
+      <a href="autores.html" class="section-link">Ver todos los autores →</a>
+    </div>
+    <div class="authors-row" id="authorsRow"></div>
+  </section>
+
+  <!-- ACCESOS RÁPIDOS -->
+  <div class="quick-access" aria-label="Accesos rápidos">
+    <div class="quick-access-inner">
+      <h2 class="quick-access-title">¿Qué querés explorar?</h2>
+      <div class="quick-access-grid">
+        <a href="autores.html" class="quick-card">
+          <div class="quick-card-icon" aria-hidden="true">✍</div>
+          <div class="quick-card-title">Autores</div>
+          <p class="quick-card-desc">Biografías completas de los 13 grandes autores de la colección.</p>
+        </a>
+        <a href="galeria.html" class="quick-card">
+          <div class="quick-card-icon" aria-hidden="true">🎬</div>
+          <div class="quick-card-title">Galería</div>
+          <p class="quick-card-desc">Experiencia visual cinematográfica con todas las portadas.</p>
+        </a>
+        <a href="#donde-comprar" class="quick-card">
+          <div class="quick-card-icon" aria-hidden="true">🛒</div>
+          <div class="quick-card-title">Dónde Comprar</div>
+          <p class="quick-card-desc">Buscá un libro y encontrá dónde conseguirlo.</p>
+        </a>
+        <a href="time/timeline.html" class="quick-card">
+          <div class="quick-card-icon" aria-hidden="true">📅</div>
+          <div class="quick-card-title">Línea de Tiempo</div>
+          <p class="quick-card-desc">Los 20 clásicos ordenados cronológicamente.</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DÓNDE COMPRAR — Buscador -->
+  <div class="section-divider"></div>
+  <section class="buy-section" id="donde-comprar" aria-label="Dónde comprar">
+    <div class="buy-section-header">
+      <p class="section-eyebrow" style="text-align:center">🛒 Encontrá tu libro</p>
+      <h2 class="section-title" style="text-align:center">Dónde <em>Comprar</em></h2>
+      <p style="color:var(--text-2);font-size:.95rem;margin-top:.75rem;max-width:500px;margin-left:auto;margin-right:auto;text-align:center">
+        Buscá cualquier libro de la colección y encontrá los enlaces para comprarlo.
+      </p>
+    </div>
+
+    <div class="buy-search-wrap">
+      <svg class="buy-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="search" id="buySearchInput" class="buy-search-input"
+        placeholder="Buscá por título o autor…" aria-label="Buscar libro para comprar" autocomplete="off" />
+      <button class="buy-search-clear" id="buySearchClear" aria-label="Limpiar búsqueda">✕</button>
+    </div>
+
+    <div class="buy-initial" id="buyInitial">
+      <p>Escribí el nombre de un libro para ver dónde conseguirlo</p>
+      <div class="buy-suggestions" id="buySuggestions" aria-label="Sugerencias"></div>
+    </div>
+
+    <div class="buy-results" id="buyResults" aria-live="polite"></div>
+
+    <div class="buy-no-results" id="buyNoResults" aria-live="polite">
+      <div class="buy-no-results-icon" aria-hidden="true">📭</div>
+      <p>No se encontró ningún libro con ese término.<br>Probá con otro título o autor.</p>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Detalle del libro">
+    <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox-panel">
+      <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar">✕</button>
+      <div class="lightbox-body" id="lightboxBody"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER MEJORADO -->
+  <footer class="footer-full" role="contentinfo">
+    <div class="footer-full-inner">
+      <div>
+        <div class="footer-brand">✦ Biblioteca</div>
+        <p class="footer-tagline">Una selección de los 20 grandes clásicos de la literatura universal. Diseñada para lectores apasionados.</p>
+      </div>
+      <div>
+        <p class="footer-col-title">Explorar</p>
+        <nav class="footer-col-links">
+          <a href="index.html">Inicio</a>
+          <a href="galeria.html">Galería</a>
+          <a href="autores.html">Autores</a>
+          <a href="time/timeline.html">Línea de Tiempo</a>
+        </nav>
+      </div>
+      <div>
+        <p class="footer-col-title">Colección</p>
+        <nav class="footer-col-links">
+          <a href="galeria.html">Todos los clásicos</a>
+          <a href="#donde-comprar">Dónde Comprar</a>
+          <a href="time/timeline.html">Cronología</a>
+        </nav>
+      </div>
+      <div>
+        <p class="footer-col-title">Info</p>
+        <nav class="footer-col-links">
+          <a href="forms/forms.html">Contacto</a>
+          <!-- Reemplazá '#' por el enlace real -->
+          <a href="#">Privacidad</a>
+          <a href="#">Términos</a>
+        </nav>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 Biblioteca Universal · Todos los derechos reservados</p>
+      <div class="footer-bottom-links">
+        <a href="forms/forms.html">Contacto</a>
+        <a href="#">Privacidad</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script>
+  /* ══ INDEX.JS — lógica inline ══ */
+
+  const revealIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('visible');revealIO.unobserve(e.target);} });
+  }, {threshold:.06, rootMargin:'0px 0px -20px 0px'});
+
+  /* ── Lightbox ─────────────────────────────────────────────── */
+  function openLightbox(book) {
+    const lb=document.getElementById('lightbox'), body=document.getElementById('lightboxBody');
+    if(!lb||!body) return;
+    body.innerHTML=`
+      <div class="lb-cover"><img src="${book.cover}" alt="Portada de ${book.title}" /></div>
+      <div class="lb-info">
+        <div class="lb-label">${book.genre||'Clásico de la Literatura Universal'}</div>
+        <h2 class="lb-title">${book.title}</h2>
+        <p class="lb-author">por ${book.author}</p>
+        <div class="lb-meta">
+          <div class="lb-meta-item"><span class="lb-meta-key">Año</span><span class="lb-meta-val">${formatYear(book.year)}</span></div>
+          <div class="lb-meta-item"><span class="lb-meta-key">Puntuación</span><div class="lb-stars">${renderStars(book.rating,true)}<span class="lb-rating-num">${book.rating.toFixed(1)}/5</span></div></div>
+        </div>
+        <div class="lb-synopsis-title">Sinopsis</div>
+        <p class="lb-synopsis">${book.synopsis}</p>
+      </div>`;
+    lb.classList.add('open'); document.body.style.overflow='hidden';
+    document.getElementById('lightboxClose')?.focus();
+  }
+  function closeLightbox(){ document.getElementById('lightbox')?.classList.remove('open'); document.body.style.overflow=''; }
+  document.getElementById('lightboxClose')?.addEventListener('click', closeLightbox);
+  document.getElementById('lightboxBackdrop')?.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLightbox(); });
+
+  /* ── Libros destacados (primeros 8) ───────────────────────── */
+  function buildFeatured() {
+    const grid=document.getElementById('featuredGrid');
+    if(!grid||typeof BOOKS==='undefined') return;
+    BOOKS.slice(0,8).forEach((book,i)=>{
+      const el=document.createElement('article');
+      el.className='featured-book'; el.setAttribute('role','button');
+      el.setAttribute('tabindex','0'); el.style.transitionDelay=`${(i%4)*60}ms`;
+      el.innerHTML=`
+        <!-- Portada: ${book.title} | Tamaño: 400×600 px | Proporción: 2:3 -->
+        <div class="featured-book-cover"><img src="${book.cover}" alt="Portada de ${book.title}" loading="lazy" /></div>
+        <div class="featured-book-info">
+          <div class="featured-book-author">${book.author}</div>
+          <div class="featured-book-title">${book.title}</div>
+          <div class="featured-book-genre">${book.genre||''}</div>
+          <div class="featured-book-stars">${renderStars(book.rating)}<span class="featured-book-rating">${book.rating.toFixed(1)}</span></div>
+        </div>`;
+      el.addEventListener('click', ()=>openLightbox(book));
+      el.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(book);} });
+      grid.appendChild(el); revealIO.observe(el);
+    });
+  }
+
+  /* ── Autores fila ──────────────────────────────────────────── */
+  function buildAuthorsRow() {
+    const row=document.getElementById('authorsRow');
+    if(!row||typeof AUTHORS==='undefined') return;
+    AUTHORS.forEach((author,i)=>{
+      const initials=author.initials||(author.name||'').split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
+      const el=document.createElement('article');
+      el.className='author-mini-card'; el.style.transitionDelay=`${(i%6)*55}ms`;
+      el.innerHTML=`
+        <!-- Foto autor: ${author.name} | Tamaño: 800×800 px | Proporción: 1:1 -->
+        <div class="author-mini-img">
+          ${author.image?`<img src="${author.image}" alt="${author.name}" loading="lazy" />`:''}
+          ${!author.image?`<div class="author-mini-placeholder"><span>${initials}</span></div>`:''}
+          <div class="author-mini-img-overlay"></div>
+        </div>
+        <div class="author-mini-body">
+          <div class="author-mini-era">${author.era}</div>
+          <div class="author-mini-name">${author.name}</div>
+          <div class="author-mini-dates">${author.dates}</div>
+        </div>`;
+      el.addEventListener('click', ()=>{ window.location.href='autores.html'; });
+      row.appendChild(el); revealIO.observe(el);
+    });
+  }
+
+  /* ── Buscador "Dónde Comprar" ──────────────────────────────── */
+  function buildSuggestions() {
+    const wrap=document.getElementById('buySuggestions');
+    if(!wrap||typeof BOOKS==='undefined') return;
+    BOOKS.slice(0,6).forEach(book=>{
+      const btn=document.createElement('button'); btn.className='buy-suggestion-btn';
+      btn.textContent=book.title;
+      btn.addEventListener('click', ()=>{ buyInput.value=book.title; runBuySearch(book.title); buyInput.focus(); });
+      wrap.appendChild(btn);
+    });
+  }
+
+  function renderBuyResult(book) {
+    const card=document.createElement('div'); card.className='buy-result-card';
+    const links=(book.buyLinks||[
+      {label:'Amazon',url:'#'},{label:'Casa del Libro',url:'#'},
+      {label:'Mercado Libre',url:'#'},{label:'Librería local',url:'#'}
+    ]).map(l=>
+      `<!-- Reemplazar href="#" por el enlace real de ${l.label} -->
+       <a href="${l.url}" class="buy-link" target="_blank" rel="noopener">🛒 ${l.label}</a>`
+    ).join('');
+    card.innerHTML=`
+      <div class="buy-result-inner">
+        <!-- Portada: ${book.title} | Tamaño: 400×600 px | Proporción: 2:3 -->
+        <div class="buy-result-cover">
+          <img src="${book.cover}" alt="Portada de ${book.title}" loading="lazy" onerror="this.style.display='none'" />
+          <div class="buy-result-cover-ph" aria-hidden="true">${book.title.slice(0,2).toUpperCase()}</div>
+        </div>
+        <div class="buy-result-info">
+          <div class="buy-result-genre">${book.genre||'Literatura universal'}</div>
+          <h3 class="buy-result-title">${book.title}</h3>
+          <p class="buy-result-author">por ${book.author}</p>
+          <div class="buy-result-meta">
+            <div><span class="buy-result-meta-key">Año</span><span class="buy-result-meta-val">${formatYear(book.year)}</span></div>
+            <div><span class="buy-result-meta-key">Puntuación</span><span class="buy-result-meta-val">★ ${book.rating.toFixed(1)}</span></div>
+          </div>
+          <p class="buy-result-synopsis">${book.synopsis}</p>
+          <p class="buy-links-title">Comprar en:</p>
+          <div class="buy-links-grid">${links}</div>
+        </div>
+      </div>`;
+    return card;
+  }
+
+  const buyInput   = document.getElementById('buySearchInput');
+  const buyClear   = document.getElementById('buySearchClear');
+  const buyResults = document.getElementById('buyResults');
+  const buyNoRes   = document.getElementById('buyNoResults');
+  const buyInitial = document.getElementById('buyInitial');
+
+  function runBuySearch(term) {
+    const t=term.toLowerCase().trim();
+    buyInitial.style.display='none';
+    buyResults.classList.remove('active'); buyNoRes.classList.remove('active');
+    buyResults.innerHTML='';
+    if(!t){ buyInitial.style.display='block'; buyClear.classList.remove('visible'); return; }
+    buyClear.classList.toggle('visible', t.length>0);
+    if(typeof BOOKS==='undefined') return;
+    const found=BOOKS.filter(b=>
+      b.title.toLowerCase().includes(t)||
+      b.author.toLowerCase().includes(t)||
+      (b.genre||'').toLowerCase().includes(t)
+    );
+    if(found.length===0){ buyNoRes.classList.add('active'); }
+    else{ buyResults.classList.add('active'); found.forEach(b=>buyResults.appendChild(renderBuyResult(b))); }
+  }
+
+  if(buyInput) buyInput.addEventListener('input', ()=>runBuySearch(buyInput.value));
+  if(buyClear) buyClear.addEventListener('click', ()=>{ buyInput.value=''; runBuySearch(''); buyInput.focus(); });
+
+  /* ── Cursor ───────────────────────────────────────────────── */
+  (function(){
+    const c=document.getElementById('cursor'),f=document.getElementById('cursorFollower');
+    if(!c||!f||!window.matchMedia('(pointer:fine)').matches) return;
+    let mx=0,my=0,fx=0,fy=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;c.style.left=mx+'px';c.style.top=my+'px';},{passive:true});
+    (function af(){fx+=(mx-fx)*.11;fy+=(my-fy)*.11;f.style.left=fx+'px';f.style.top=fy+'px';requestAnimationFrame(af);})();
+  })();
+
+  /* ── Navbar ───────────────────────────────────────────────── */
+  (function(){
+    const nav=document.getElementById('navbar'),nt=document.getElementById('navToggle'),nl=document.getElementById('navList');
+    if(nav) window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>60),{passive:true});
+    if(!nt||!nl) return;
+    nt.addEventListener('click',()=>{const o=nl.classList.toggle('open');nt.setAttribute('aria-expanded',String(o));nt.classList.toggle('open',o);});
+    document.querySelectorAll('.nav-item').forEach(item=>{
+      const l=item.querySelector('.nav-link'),d=item.querySelector('.dropdown');
+      if(!l||!d) return;
+      l.addEventListener('click',e=>{if(window.innerWidth<=768){e.preventDefault();item.classList.toggle('open');}});
+    });
+    document.addEventListener('click',e=>{
+      if(!nl.contains(e.target)&&!nt.contains(e.target)){nl.classList.remove('open');nt.classList.remove('open');nt.setAttribute('aria-expanded','false');}
+    });
+  })();
+
+  /* ── Parallax ─────────────────────────────────────────────── */
+  const hBg=document.getElementById('headerBg');
+  if(hBg) window.addEventListener('scroll',()=>{hBg.style.transform=`translateY(${window.scrollY*.22}px)`;},{passive:true});
+
+  /* ── Init ─────────────────────────────────────────────────── */
+  buildFeatured();
+  buildAuthorsRow();
+  buildSuggestions();
+  </script>
+</body>
+</html>

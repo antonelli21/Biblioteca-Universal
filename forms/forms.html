@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contacto — Biblioteca Universal" />
+  <title>Contacto · Biblioteca Universal</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div class="cursor"          id="cursor"         aria-hidden="true"></div>
+  <div class="cursor-follower" id="cursorFollower"  aria-hidden="true"></div>
+
+  <!-- Navbar -->
+  <header role="banner">
+    <nav class="navbar" id="navbar" aria-label="Navegación principal">
+      <a href="../index.html" class="navbar-brand">✦ Biblioteca</a>
+
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navList" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav-list" id="navList" role="list">
+        <li class="nav-item"><a href="../index.html"         class="nav-link">Inicio</a></li>
+        <li class="nav-item"><a href="../time/timeline.html" class="nav-link">Línea de Tiempo</a></li>
+        <li class="nav-item" id="navLibros">
+          <a href="../galeria.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+            Libros <span class="nav-arrow" aria-hidden="true">▾</span>
+          </a>
+          <ul class="dropdown" role="menu">
+            <li role="none"><a href="../galeria.html"  role="menuitem">Galería</a></li>
+            <li role="none"><a href="../autores.html"  role="menuitem">Autores</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="forms.html" class="nav-link active">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Página de contacto -->
+  <main class="forms-page">
+
+    <!-- Header -->
+    <div class="forms-header" style="animation: fadeUp 0.7s ease both;">
+      <p class="forms-label">✦ Escribinos</p>
+      <h1 class="forms-title">
+        Hablemos<br>de <em>Libros</em>
+      </h1>
+      <p class="forms-sub">
+        ¿Tenés una sugerencia, consulta o simplemente querés hablar de literatura?
+        Estamos para escucharte.
+      </p>
+    </div>
+
+    <!-- Formulario compacto -->
+    <div class="contact-card" style="animation: fadeUp 0.7s 0.1s ease both;">
+
+      <!-- Nombre -->
+      <div class="form-group">
+        <label class="form-label" for="nombre">Nombre</label>
+        <input
+          class="form-input" type="text" id="nombre" name="nombre"
+          placeholder="Tu nombre completo" autocomplete="name"
+          required
+        />
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label" for="email">Correo electrónico</label>
+        <input
+          class="form-input" type="email" id="email" name="email"
+          placeholder="correo@ejemplo.com" autocomplete="email"
+          required
+        />
+      </div>
+
+      <!-- Asunto -->
+      <div class="form-group">
+        <label class="form-label" for="asunto">Asunto</label>
+        <select class="form-select" id="asunto" name="asunto">
+          <option value="">Seleccioná un tema</option>
+          <option value="sugerencia">Sugerencia de libro</option>
+          <option value="consulta">Consulta general</option>
+          <option value="error">Reportar un error</option>
+          <option value="colaboracion">Colaboración</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+
+      <!-- Mensaje -->
+      <div class="form-group">
+        <label class="form-label" for="mensaje">Mensaje</label>
+        <textarea
+          class="form-textarea" id="mensaje" name="mensaje"
+          placeholder="Contanos tu idea, consulta o comentario…"
+          rows="4" required
+        ></textarea>
+      </div>
+
+      <!-- Botón -->
+      <button class="form-btn" id="formBtn" type="button" onclick="submitForm()">
+        Enviar mensaje
+      </button>
+
+      <!-- Feedback éxito -->
+      <div class="form-success" id="formSuccess">
+        <div class="form-success-icon">✦</div>
+        <p class="form-success-msg">¡Mensaje recibido! Te respondemos pronto.</p>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         SECCIÓN MAPA
+         ═══════════════════════════════════════════════════ -->
+    <section class="map-section" aria-label="Ubicación" style="animation: fadeUp 0.7s 0.2s ease both;">
+
+      <div class="map-header">
+        <p class="map-label">✦ Dónde encontrarnos</p>
+        <h2 class="map-title">Nuestra Ubicación</h2>
+        <p class="map-sub">Gob an Choire, Irlanda — El refugio literario frente a las brumas del Atlántico</p>
+      </div>
+
+      <div class="map-container">
+
+  <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d20656.547031750437!2d-9.931138060162011!3d53.928362192516545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48599c18ea44ef3d%3A0xa00c7a99731b740!2sSraheens%2C%20Gob%20an%20Choire%2C%20Co.%20Mayo%2C%20Irlanda!5e0!3m2!1ses-419!2sar!4v1780192561020!5m2!1ses-419!2sar" 
+      width="100%" height="340"
+      style="border:0;"
+        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
+
+
+
+
+
+
+        <!-- ▲▲▲  FIN SECCIÓN MAPA  ▲▲▲ -->
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" style="margin-top:4rem;">
+    <div class="footer-ornament" aria-hidden="true">✦</div>
+    <nav class="footer-links" aria-label="Enlaces del pie">
+      <a href="../index.html">Inicio</a>
+      <a href="../galeria.html">Galería</a>
+      <a href="../autores.html">Autores</a>
+      <a href="../time/timeline.html">Línea de Tiempo</a>
+      <a href="forms.html">Contacto</a>
+    </nav>
+    <p>Una selección de los grandes clásicos de la literatura universal</p>
+  </footer>
+
+  <script src="../js/data.js"></script>
+  <script>
+    /* ── Formulario ── */
+    function submitForm() {
+      const nombre  = document.getElementById('nombre').value.trim();
+      const email   = document.getElementById('email').value.trim();
+      const mensaje = document.getElementById('mensaje').value.trim();
+
+      if (!nombre || !email || !mensaje) {
+        alert('Por favor completá los campos obligatorios.');
+        return;
+      }
+
+      const btn = document.getElementById('formBtn');
+      btn.textContent = 'Enviando…';
+      btn.style.opacity = '0.6';
+      btn.disabled = true;
+
+      // Simular envío (reemplazá con tu lógica real o Formspree)
+      setTimeout(() => {
+        btn.style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+        ['nombre','email','asunto','mensaje'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = '';
+        });
+      }, 1200);
+    }
+
+    /* ── Cursor ── */
+    const cursor   = document.getElementById('cursor');
+    const follower = document.getElementById('cursorFollower');
+    if (cursor && follower && window.matchMedia('(pointer: fine)').matches) {
+      let mx=0,my=0,fx=0,fy=0;
+      document.addEventListener('mousemove', e => {
+        mx=e.clientX; my=e.clientY;
+        cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+      });
+      (function af(){
+        fx+=(mx-fx)*0.11; fy+=(my-fy)*0.11;
+        follower.style.left=fx+'px'; follower.style.top=fy+'px';
+        requestAnimationFrame(af);
+      })();
+    }
+
+    /* ── Navbar ── */
+    const navbar    = document.getElementById('navbar');
+    const navToggle = document.getElementById('navToggle');
+    const navList   = document.getElementById('navList');
+
+    if (navbar) {
+      window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 60);
+      }, { passive: true });
+    }
+
+    if (navToggle && navList) {
+      navToggle.addEventListener('click', () => {
+        const o = navList.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', o);
+        navToggle.classList.toggle('open', o);
+      });
+      document.querySelectorAll('.nav-item').forEach(item => {
+        const link = item.querySelector('.nav-link');
+        const dd   = item.querySelector('.dropdown');
+        if (!dd) return;
+        link.addEventListener('click', (e) => {
+          if (window.innerWidth <= 768) {
+            e.preventDefault();
+            item.classList.toggle('open');
+          }
+        });
+      });
+      document.addEventListener('click', (e) => {
+        if (!navList.contains(e.target) && !navToggle.contains(e.target)) {
+          navList.classList.remove('open');
+          navToggle.classList.remove('open');
+          navToggle.setAttribute('aria-expanded','false');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

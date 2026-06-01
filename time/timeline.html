@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Línea de tiempo literaria — los clásicos a través de la historia." />
+  <title>Línea de Tiempo · Biblioteca Universal</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div class="cursor"          id="cursor"         aria-hidden="true"></div>
+  <div class="cursor-follower" id="cursorFollower"  aria-hidden="true"></div>
+
+  <!-- Navbar -->
+  <header role="banner">
+    <nav class="navbar" id="navbar" aria-label="Navegación principal">
+      <a href="../index.html" class="navbar-brand">✦ Biblioteca</a>
+
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navList" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav-list" id="navList" role="list">
+        <li class="nav-item"><a href="../index.html"         class="nav-link">Inicio</a></li>
+        <li class="nav-item"><a href="timeline.html"         class="nav-link active">Línea de Tiempo</a></li>
+        <li class="nav-item" id="navLibros">
+          <a href="../galeria.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+            Libros <span class="nav-arrow" aria-hidden="true">▾</span>
+          </a>
+          <ul class="dropdown" role="menu">
+            <li role="none"><a href="../galeria.html" role="menuitem">Galería</a></li>
+            <li role="none"><a href="../autores.html" role="menuitem">Autores</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="../forms/forms.html" class="nav-link">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="timeline-page">
+
+    <div class="timeline-header">
+      <p class="galeria-intro-label" style="animation: fadeUp 0.7s ease both; display:inline-block;">
+        Historia literaria
+      </p>
+      <h1 class="timeline-title" style="animation: fadeUp 0.7s 0.08s ease both;">
+        <em>3000 Años</em><br>de Literatura
+      </h1>
+      <p class="timeline-sub" style="animation: fadeUp 0.7s 0.15s ease both;">
+        Los 20 clásicos ordenados cronológicamente desde la Antigüedad hasta el siglo XX
+      </p>
+    </div>
+
+    <div class="timeline" id="timeline" aria-label="Línea de tiempo literaria">
+      <!-- Generado por JS -->
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-ornament" aria-hidden="true">✦</div>
+    <nav class="footer-links" aria-label="Enlaces del pie">
+      <a href="../index.html">Inicio</a>
+      <a href="../galeria.html">Galería</a>
+      <a href="../autores.html">Autores</a>
+      <a href="timeline.html">Línea de Tiempo</a>
+      <a href="../forms/forms.html">Contacto</a>
+    </nav>
+    <p>Una selección de los grandes clásicos de la literatura universal</p>
+  </footer>
+
+  <script src="../js/data.js"></script>
+  <script>
+    /* ── Build timeline ── */
+    function buildTimeline() {
+      const container = document.getElementById('timeline');
+      if (!container) return;
+
+      const sorted = [...BOOKS].sort((a, b) => a.year - b.year);
+
+      sorted.forEach((book, i) => {
+        const item = document.createElement('div');
+        item.className = 'tl-item';
+
+        const isOdd = i % 2 === 0;
+
+        item.innerHTML = `
+          <div class="tl-dot" aria-hidden="true"></div>
+          <div class="${isOdd ? 'tl-content' : 'tl-year'}">
+            ${isOdd
+              ? `<div class="tl-title">${book.title}</div>
+                 <div class="tl-author">${book.author}</div>
+                 <p class="tl-desc">${book.synopsis.slice(0, 120)}…</p>`
+              : `<div class="tl-year-label">${formatYear(book.year)}</div>
+                 <div class="tl-era">${book.era === 'ancient' ? 'Antigüedad' : 'Era moderna'}</div>`
+            }
+          </div>
+          <div class="${isOdd ? 'tl-year' : 'tl-content'}">
+            ${isOdd
+              ? `<div class="tl-year-label">${formatYear(book.year)}</div>
+                 <div class="tl-era">${book.era === 'ancient' ? 'Antigüedad' : 'Era moderna'}</div>`
+              : `<div class="tl-title">${book.title}</div>
+                 <div class="tl-author">${book.author}</div>
+                 <p class="tl-desc">${book.synopsis.slice(0, 120)}…</p>`
+            }
+          </div>
+        `;
+
+        container.appendChild(item);
+      });
+
+      // Observer
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.tl-item').forEach(el => io.observe(el));
+    }
+
+    /* ── Cursor ── */
+    const cursor   = document.getElementById('cursor');
+    const follower = document.getElementById('cursorFollower');
+    if (cursor && follower && window.matchMedia('(pointer: fine)').matches) {
+      let mx=0,my=0,fx=0,fy=0;
+      document.addEventListener('mousemove', e => {
+        mx=e.clientX; my=e.clientY;
+        cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+      });
+      (function af(){
+        fx+=(mx-fx)*0.11; fy+=(my-fy)*0.11;
+        follower.style.left=fx+'px'; follower.style.top=fy+'px';
+        requestAnimationFrame(af);
+      })();
+    }
+
+    /* ── Navbar ── */
+    const navbar    = document.getElementById('navbar');
+    const navToggle = document.getElementById('navToggle');
+    const navList   = document.getElementById('navList');
+
+    if (navbar) {
+      window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 60);
+      }, { passive: true });
+    }
+
+    if (navToggle && navList) {
+      navToggle.addEventListener('click', () => {
+        const o = navList.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', o);
+        navToggle.classList.toggle('open', o);
+      });
+      document.querySelectorAll('.nav-item').forEach(item => {
+        const link = item.querySelector('.nav-link');
+        const dd   = item.querySelector('.dropdown');
+        if (!dd) return;
+        link.addEventListener('click', (e) => {
+          if (window.innerWidth <= 768) {
+            e.preventDefault();
+            item.classList.toggle('open');
+          }
+        });
+      });
+      document.addEventListener('click', (e) => {
+        if (!navList.contains(e.target) && !navToggle.contains(e.target)) {
+          navList.classList.remove('open');
+          navToggle.classList.remove('open');
+          navToggle.setAttribute('aria-expanded','false');
+        }
+      });
+    }
+
+    buildTimeline();
+  </script>
+</body>
+</html>
